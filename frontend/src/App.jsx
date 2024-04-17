@@ -15,7 +15,7 @@ function App() {
   const [aspect,setAspect] = useState(1/1);
   const [facing,setFacing] = useState('user')
 
-  const url = "http://localhost:7000";
+  const url = "https://imagecapture.onrender.com";
   let imageSrc;
   const capture = () => {
     imageSrc = webcamRef.current.getScreenshot();

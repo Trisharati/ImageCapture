@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 function Gallery() {
-  const url = "http://localhost:7000";
+  const url = "https://imagecapture.onrender.com";
   const [img, setImg] = useState([]);
 
   const loadGallery = async()=>{
