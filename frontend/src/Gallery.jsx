@@ -3,19 +3,23 @@ import {toast} from 'react-toastify';
 import axios from "axios";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { ClipLoader } from 'react-spinners';
 
 function Gallery() {
   const url = "https://imagecapture.onrender.com";
   const [img, setImg] = useState([]);
-
+  const [isLoading,setIsLoading] = useState();
   const loadGallery = async()=>{
+    setIsLoading(true)
     axios
     .get(`${url}/view-gallery`)
     .then((res) => {
       console.log("res", res);
+      setIsLoading(false)
       setImg(res.data.images);
     })
     .catch((err) => {
+      setIsLoading(false)
       console.log("err", err);
     });
   }
@@ -44,6 +48,9 @@ function Gallery() {
   return (
     <div className="fluid-container text-center">
       <Navbar/>
+      {isLoading ? 
+      <ClipLoader color={'#123abc'} loading={isLoading} size={70} /> :
+      <>
       <div className="gallery">
       <h1 className="text-center">Image Gallery</h1>
       <div className="mt-4 mb-3">
@@ -75,8 +82,10 @@ function Gallery() {
               // />
             ))}
       </div>
-      </div>
+      </div>      
       <Footer/>
+      </>
+}
     </div>
   );
 }

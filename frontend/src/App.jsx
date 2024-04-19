@@ -6,18 +6,29 @@ import Webcam from "react-webcam";
 import "./style.css";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { ClipLoader } from 'react-spinners';
 
 function App() {
   const webcamRef = useRef(null);
   const navigate = useNavigate();
   const [img, setImg] = useState([]);
   const [zoomLevel, setZoomLevel] = useState(1.0);
+  const [isLoading,setIsLoading] = useState(false);
   const [aspect,setAspect] = useState(1/1);
   const [facing,setFacing] = useState('user')
+  const [isCaptured, setIsCaptured] = useState(false); 
 
   const url = "https://imagecapture.onrender.com";
   let imageSrc;
   const capture = () => {
+    // setIsCaptured(true);
+     // Play shutter sound
+     const shutterSound = new Audio("/shutter-sound.mp3");
+     shutterSound.play();
+ 
+     // Apply shutter animation
+     const shutterElement = document.querySelector(".shutter");
+     shutterElement.classList.add("shutter-animate");
     imageSrc = webcamRef.current.getScreenshot();
     const formData = new FormData();
     formData.append("image", JSON.stringify(imageSrc));
@@ -41,14 +52,17 @@ function App() {
   };
 
 const loadGallery = async()=>{
+  setIsLoading(true)
   axios
   .get(`${url}/view-gallery`)
   .then((res) => {
     console.log("res", res);
     setImg(res.data.images);
+    setIsLoading(false)
   })
   .catch((err) => {
     console.log("err", err);
+    setIsLoading(true)
   });
 }
 
@@ -114,6 +128,9 @@ axios.get(`${url}/delete-image/${id}`)
   return (
     <div className="fluid-container text-center">
       <Navbar/>
+      {isLoading ? 
+      <ClipLoader color={'#123abc'} loading={isLoading} size={70} /> :
+      <>
       <h1 className="">Capture Your Image</h1>
       <div className="">
         <Webcam
@@ -157,6 +174,9 @@ axios.get(`${url}/delete-image/${id}`)
         Capture
       </button>
 
+ {/* Shutter animation */}
+ <div className="shutter"></div>
+
       <div className="mt-3 mb-3">
         {img.length > 0 &&
           img
@@ -184,6 +204,7 @@ axios.get(`${url}/delete-image/${id}`)
         </button>
       )}
       <Footer/>
+      </>}
     </div>
   );
 }
