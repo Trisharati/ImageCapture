@@ -71,15 +71,7 @@ function Gallery() {
                   alt={`Image ${index + 1}`}
                 />
                 <i class="fa-solid fa-trash delete-icon" onClick={()=>handleDelete(x._id)}></i>
-              </div>
-
-              // <img
-              //   key={index}
-              //   src={x.imageString}
-              //   height="100px"
-              //   width="150px"
-              //   className="image-box"
-              // />
+              </div>           
             ))}
       </div>
       </div>      
