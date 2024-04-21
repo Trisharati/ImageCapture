@@ -9,6 +9,8 @@ import Footer from "./Footer";
 import { ClipLoader } from "react-spinners";
 import styled, { keyframes } from "styled-components";
 import { pulse } from "react-animations";
+import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
+
 
 function App() {
   const webcamRef = useRef(null);
@@ -19,6 +21,8 @@ function App() {
   const [aspect, setAspect] = useState(1 / 1);
   const [facing, setFacing] = useState("user");
   const [isCaptured, setIsCaptured] = useState(false);
+
+  // const { zoomIn, zoomOut, resetTransform } = useControls();
 
   const url = "https://imagecapture.onrender.com";
   let imageSrc;
@@ -86,42 +90,6 @@ function App() {
     navigate("/gallery", { images: img });
   };
 
-  const handleZoomIn = () => {
-    console.log("p1", zoomLevel);
-    setZoomLevel((prevZoom) =>{
-      console.log(prevZoom.toFixed(1),prevZoom);
-      return Math.min((prevZoom + 0.1).toFixed(1), 2.5);
-    })
-    return;
-  };
-
-  const handleZoomOut = () => {
-    console.log("p2", zoomLevel);
-    setZoomLevel((prevZoom) =>  {
-      return Math.max((prevZoom - 0.1).toFixed(1), 0.6)
-    })
-    return;
-  };
-
-  const handleAspect = async (val) => {
-    if (val == 16 / 9) {
-      document.getElementById("dropdownMenuButton").innerText = "16:9";
-    } else if (val == 4 / 3) {
-      document.getElementById("dropdownMenuButton").innerText = "4:3";
-    }
-    if (val == 1 / 1) {
-      document.getElementById("dropdownMenuButton").innerText = "1:1";
-    }
-    setAspect(val);
-  };
-
-  const handleFacing = async () => {
-    if (facing === "environment") {
-      setFacing("user");
-    } else {
-      setFacing("environment");
-    }
-  };
 
   const handleDelete = async (id) => {
     let val = await confirm("Do you want to delete the picture ?");
@@ -141,6 +109,72 @@ function App() {
     }
   };
 
+  const Buttons = () => {
+    const { zoomIn, zoomOut, resetTransform } = useControls();
+   
+    const handleAspect = async (val) => {
+      console.log('val',val);
+      if (val == 16 / 9) {
+        document.getElementById("dropdownMenuButton").innerText = "16:9";
+      } else if (val == 4 / 3) {
+        document.getElementById("dropdownMenuButton").innerText = "4:3";
+      }
+      if (val == 1 / 1) {
+        document.getElementById("dropdownMenuButton").innerText = "1:1";
+      }
+      setAspect(val);
+    };
+  
+    const handleFacing = async () => {
+      if (facing === "environment") {
+        setFacing("user");
+      } else {
+        setFacing("environment");
+      }
+    };
+  
+  
+    return (
+      <>
+      <div className="form-inline button-group mt-3">
+        <button className='all-buttons' onClick={() => zoomIn()}>+</button>&nbsp;
+        <button className='all-buttons' onClick={() => zoomOut()}>-</button>&nbsp;
+        <button className='all-buttons' onClick={() => resetTransform()}>x</button>
+        <div class="dropdown ml-2">
+                <button
+                  class="all-buttons dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Aspect Ratio
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" onClick={() => handleAspect(16 / 9)}>
+                    16:9
+                  </a>
+                  <a class="dropdown-item" onClick={() => handleAspect(4 / 3)}>
+                    4:3
+                  </a>
+                  <a class="dropdown-item" onClick={() => handleAspect(1 / 1)}>
+                    1:1
+                  </a>
+                </div>
+              </div>
+              <button className="all-buttons ml-2" onClick={handleFacing}>
+                <i class="fa-solid fa-camera-rotate"></i>
+              </button>              
+      </div>
+      <button onClick={capture} className="all-buttons mt-3">
+      Capture
+    </button>
+    </>
+    );
+  };
+
+
   return (
     <div className="fluid-container text-center">
       <Navbar />
@@ -149,16 +183,24 @@ function App() {
       ) : (
         <>        
           <h1 className="mb-5">Capture Your Image</h1>
-          <div className="">
-            <Webcam
+          <div  >
+            <TransformWrapper >
+              <div className="canvas">            
+              <TransformComponent >
+              <Webcam
               audio={false}
-              ref={webcamRef}              
-              style={{ width: `${300 * zoomLevel}px`, height: `${200 * zoomLevel}px` }}                                                                 
+              ref={webcamRef}      
+              className="webcam-container"                                                                                                     
               videoConstraints={{                
                 aspectRatio: aspect,
                 facingMode: { exact: `${facing}` }                
               }}
             />
+              </TransformComponent>
+              <Buttons/>
+              </div>
+            </TransformWrapper>
+            
             {isCaptured && (
               <CameraSettings>
                 <Webcam                 
@@ -170,48 +212,9 @@ function App() {
               </CameraSettings>
             )}
           </div>
-          <div className="form-inline button-group mt-4">
-            <button onClick={handleZoomIn} className="all-buttons" tabIndex={0} type="button">              
-              <i class="fa-solid fa-magnifying-glass-plus" ></i>
-            </button>
-            <button            
-              onClick={handleZoomOut}
-              className="all-buttons ml-2"
-              tabIndex={0}
-              type="button"
-            >
-              <i class="fa-solid fa-magnifying-glass-minus"></i>              
-            </button>
-            <div class="dropdown ml-2">
-              <button
-                class="all-buttons dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Aspect Ratio
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" onClick={() => handleAspect(16 / 9)}>
-                  16:9
-                </a>
-                <a class="dropdown-item" onClick={() => handleAspect(4 / 3)}>
-                  4:3
-                </a>
-                <a class="dropdown-item" onClick={() => handleAspect(1 / 1)}>
-                  1:1
-                </a>
-              </div>
-            </div>
-            <button className="all-buttons ml-2" onClick={handleFacing}>
-              <i class="fa-solid fa-camera-rotate"></i>
-            </button>
-          </div>
-          <button onClick={capture} className="all-buttons mt-3">
-            Capture
-          </button>
+          {/* <div className="form-inline button-group">           
+          </div> */}
+          
 
           <div className="mt-3 mb-3">
             {img.length > 0 &&

@@ -51,10 +51,12 @@ function Gallery() {
       {isLoading ? 
       <ClipLoader color={'#123abc'} loading={isLoading} size={70} /> :
       <>
+      
+      <div className="text-center"></div>
       <div className="gallery">
       <h1 className="text-center">Image Gallery</h1>
       <div className="mt-4 mb-3">
-        {img.length > 0 &&
+        {img.length > 0 ? (
           img
             .slice()
             .reverse()
@@ -72,7 +74,8 @@ function Gallery() {
                 />
                 <i class="fa-solid fa-trash delete-icon" onClick={()=>handleDelete(x._id)}></i>
               </div>           
-            ))}
+            ))) : 
+            <p>No Images Found</p>}
       </div>
       </div>      
       <Footer/>
