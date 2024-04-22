@@ -1,6 +1,4 @@
-.webcam-container-wrapper {
-  position: relative;
-}
+
 .button-group {
   position:relative;
   display: flex;
@@ -25,8 +23,7 @@
   border: 0;
   border-radius: 20px;
   padding: 1px 10px;
-  /* margin-top: 5px; */
-  /* margin-bottom: 40px; */
+  
 }
 .delete-icon {
   position: absolute;
@@ -39,8 +36,7 @@
   margin-right: 10px;
 }
 .curved-navbar {
-  /* position: relative;
-    overflow: hidden; */
+ 
   height: 150px;
   clip-path: polygon(
     0% 100%,
@@ -73,33 +69,5 @@
   );
 }
 
-/* For desktop */
-@media only screen and (min-width: 1024px) {
-  .webcam-container {
-    width: 50vw;
-    height:50vh;
-    margin-left: 25vw;
-    margin-right: 25vw;
-  }
-}
 
-/* For tablets */
-@media only screen and (min-width: 768px) and (max-width: 1023px) {
-  .webcam-container {
-    width: 50vw;
-    height:50vh;
-    margin-left: 25vw;
-    margin-right: 25vw;   
-  }
-}
 
-/* For mobile devices */
-@media only screen and (max-width: 767px) {
-  .webcam-container {
-    width: 50vw;
-    height:50vh;
-    margin-left: 25vw;
-    margin-right: 25vw;
-    transform-origin: center center;  
-  }
-}

@@ -9,11 +9,7 @@ import Footer from "./Footer";
 import { ClipLoader } from "react-spinners";
 import styled, { keyframes } from "styled-components";
 import { pulse } from "react-animations";
-import {
-  TransformWrapper,
-  TransformComponent,
-  useControls,
-} from "react-zoom-pan-pinch";
+
 
 function App() {
   const webcamRef = useRef(null);
@@ -184,12 +180,7 @@ function App() {
             {isCaptured && (
               <CameraSettings>
                 <Webcam
-                  style={{
-                    width: `${window.innerWidth * 0.5 * zoomLevel}px`,
-                    height: `${window.innerHeight * 0.5 * zoomLevel}px`,
-                    marginLeft: `${window.innerWidth * 0.25}px`,
-                    marginRight: `${window.innerWidth * 0.25}px`,
-                  }}
+                style={{height:'300px',width:'200px'}}
                   videoConstraints={{
                     aspectRatio: aspect,
                     facingMode: { exact: `${facing}` },
